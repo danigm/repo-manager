@@ -43,8 +43,8 @@ mod schema;
 mod tokens;
 mod jobs;
 
-use models::DbExecutor;
-use jobs::{JobQueue, StopJobQueue, start_job_executor, cleanup_started_jobs};
+use crate::models::DbExecutor;
+use crate::jobs::{JobQueue, StopJobQueue, start_job_executor, cleanup_started_jobs};
 
 struct HandleSignals {
     server: Addr<actix_net::server::Server>,

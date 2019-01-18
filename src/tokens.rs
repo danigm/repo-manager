@@ -1,10 +1,10 @@
 use actix_web::{HttpRequest, Result};
 use actix_web::middleware::{Middleware, Started};
 use actix_web::http::header::{HeaderValue, AUTHORIZATION};
-use jwt::{decode, Validation};
+use crate::jwt::{decode, Validation};
 
-use app::Claims;
-use errors::ApiError;
+use crate::app::Claims;
+use crate::errors::ApiError;
 
 pub trait ClaimsValidator {
     fn get_claims(&self) -> Option<Claims>;

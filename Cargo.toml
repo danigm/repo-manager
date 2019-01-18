@@ -2,6 +2,7 @@
 name = "repo-manager"
 version = "0.1.1"
 authors = ["Alexander Larsson <alexander.larsson@gmail.com>"]
+edition = "2018"
 # Needs nightly, so disable for now:
 # default-run = "repo-manager"
 

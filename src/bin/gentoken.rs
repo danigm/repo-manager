@@ -1,17 +1,17 @@
-extern crate jsonwebtoken as jwt;
+use jsonwebtoken as jwt;
 #[macro_use]
 extern crate serde_derive;
-extern crate base64;
-extern crate chrono;
-extern crate argparse;
-extern crate serde;
-extern crate serde_json;
+use base64;
+
+
+
+use serde_json;
 
 use std::io;
 use std::io::prelude::*;
 use std::fs;
 use std::process;
-use jwt::{encode, Header};
+use crate::jwt::{encode, Header};
 use chrono::{Utc, Duration};
 
 use argparse::{ArgumentParser, StoreTrue, Store, StoreOption, List};

@@ -1,5 +1,5 @@
-use actix::prelude::*;
-use actix::{Actor, SyncContext};
+use crate::actix::prelude::*;
+use crate::actix::{Actor, SyncContext};
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool};
@@ -21,11 +21,11 @@ use std::os::unix::process::CommandExt;
 use libc;
 use std::collections::HashMap;
 
-use app::Config;
-use errors::{JobError, JobResult};
-use models::{Job, JobKind, CommitJob, PublishJob, JobStatus, job_dependencies_with_status, RepoState, PublishedState };
-use models;
-use schema::*;
+use crate::app::Config;
+use crate::errors::{JobError, JobResult};
+use crate::models::{Job, JobKind, CommitJob, PublishJob, JobStatus, job_dependencies_with_status, RepoState, PublishedState };
+use crate::models;
+use crate::schema::*;
 
 pub struct JobExecutor {
     pub config: Arc<Config>,
@@ -746,7 +746,7 @@ impl Handler<StopJobQueue> for JobQueue {
 
     fn handle(&mut self, _msg: StopJobQueue, _ctx: &mut Self::Context) -> Self::Result {
         self.running = false;
-        ActorResponse::async(
+        ActorResponse::r#async(
             self.executor
                 .send (StopJobs())
                 .into_actor(self)
@@ -776,7 +776,7 @@ pub fn start_job_executor(config: Arc<Config>,
 pub fn cleanup_started_jobs(pool: &Pool<ConnectionManager<PgConnection>>) -> Result<(), diesel::result::Error> {
     let conn = &pool.get().unwrap();
     {
-        use schema::builds::dsl::*;
+        use crate::schema::builds::dsl::*;
         let (verifying, _) = RepoState::Verifying.to_db();
         let (purging, _) = RepoState::Purging.to_db();
         let (failed, failed_reason) = RepoState::Failed("Server was restarted during job".to_string()).to_db();
@@ -802,7 +802,7 @@ pub fn cleanup_started_jobs(pool: &Pool<ConnectionManager<PgConnection>>) -> Res
         }
     };
     {
-        use schema::jobs::dsl::*;
+        use crate::schema::jobs::dsl::*;
         let n_updated =
             diesel::update(jobs)
             .filter(status.eq(JobStatus::Started as i16))

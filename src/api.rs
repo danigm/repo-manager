@@ -12,15 +12,15 @@ use std::rc::Rc;
 use std::sync::Arc;
 use tempfile::NamedTempFile;
 use chrono::{Utc};
-use jwt;
+use crate::jwt;
 
-use app::{AppState,Claims};
-use errors::ApiError;
-use db::*;
-use models::{NewBuildRef};
+use crate::app::{AppState,Claims};
+use crate::errors::ApiError;
+use crate::db::*;
+use crate::models::{NewBuildRef};
 use actix_web::ResponseError;
-use tokens::{self, ClaimsValidator};
-use jobs::ProcessJobs;
+use crate::tokens::{self, ClaimsValidator};
+use crate::jobs::ProcessJobs;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TokenSubsetArgs {

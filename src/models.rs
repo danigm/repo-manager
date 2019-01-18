@@ -4,7 +4,7 @@ use diesel::r2d2::{ConnectionManager, Pool};
 use std::mem;
 
 use chrono;
-use schema::{ builds, build_refs, jobs, job_dependencies };
+use crate::schema::{ builds, build_refs, jobs, job_dependencies };
 
 pub struct DbExecutor(pub Pool<ConnectionManager<PgConnection>>);
 

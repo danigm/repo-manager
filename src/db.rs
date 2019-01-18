@@ -1,12 +1,12 @@
-use actix::prelude::*;
-use actix_web::*;
+use crate::actix::prelude::*;
+use crate::actix_web::*;
 use diesel;
 use diesel::prelude::*;
 use diesel::result::{Error as DieselError};
 
-use models::*;
-use errors::ApiError;
-use schema;
+use crate::models::*;
+use crate::errors::ApiError;
+use crate::schema;
 
 #[derive(Deserialize, Debug)]
 pub struct CreateBuild {
@@ -69,7 +69,7 @@ impl Handler<LookupJob> for DbExecutor {
     type Result = Result<Job, ApiError>;
 
     fn handle(&mut self, msg: LookupJob, _: &mut Self::Context) -> Self::Result {
-        use schema::jobs::dsl::*;
+        use crate::schema::jobs::dsl::*;
         let conn = &self.0.get().unwrap();
         jobs
             .filter(id.eq(msg.id))
@@ -93,8 +93,8 @@ impl Handler<LookupCommitJob> for DbExecutor {
     type Result = Result<Job, ApiError>;
 
     fn handle(&mut self, msg: LookupCommitJob, _: &mut Self::Context) -> Self::Result {
-        use schema::jobs::dsl::*;
-        use schema::builds::dsl::*;
+        use crate::schema::jobs::dsl::*;
+        use crate::schema::builds::dsl::*;
         let conn = &self.0.get().unwrap();
         jobs
             .inner_join(builds.on(commit_job_id.eq(schema::jobs::dsl::id.nullable())))
@@ -120,8 +120,8 @@ impl Handler<LookupPublishJob> for DbExecutor {
     type Result = Result<Job, ApiError>;
 
     fn handle(&mut self, msg: LookupPublishJob, _: &mut Self::Context) -> Self::Result {
-        use schema::jobs::dsl::*;
-        use schema::builds::dsl::*;
+        use crate::schema::jobs::dsl::*;
+        use crate::schema::builds::dsl::*;
         let conn = &self.0.get().unwrap();
         jobs
             .inner_join(builds.on(publish_job_id.eq(schema::jobs::dsl::id.nullable())))
@@ -147,7 +147,7 @@ impl Handler<LookupBuild> for DbExecutor {
     type Result = Result<Build, ApiError>;
 
     fn handle(&mut self, msg: LookupBuild, _: &mut Self::Context) -> Self::Result {
-        use schema::builds::dsl::*;
+        use crate::schema::builds::dsl::*;
         let conn = &self.0.get().unwrap();
         builds
             .filter(id.eq(msg.id))
@@ -172,7 +172,7 @@ impl Handler<LookupBuildRef> for DbExecutor {
     type Result = Result<BuildRef, ApiError>;
 
     fn handle(&mut self, msg: LookupBuildRef, _: &mut Self::Context) -> Self::Result {
-        use schema::build_refs::dsl::*;
+        use crate::schema::build_refs::dsl::*;
         let conn = &self.0.get().unwrap();
         build_refs
             .filter(build_id.eq(msg.id))
@@ -195,7 +195,7 @@ impl Handler<LookupBuildRefs> for DbExecutor {
     type Result = Result<Vec<BuildRef>, ApiError>;
 
     fn handle(&mut self, msg: LookupBuildRefs, _: &mut Self::Context) -> Self::Result {
-        use schema::build_refs::dsl::*;
+        use crate::schema::build_refs::dsl::*;
         let conn = &self.0.get().unwrap();
         build_refs
             .filter(build_id.eq(msg.id))
@@ -216,7 +216,7 @@ impl Handler<ListBuilds> for DbExecutor {
     type Result = Result<Vec<Build>, ApiError>;
 
     fn handle(&mut self, _msg: ListBuilds, _: &mut Self::Context) -> Self::Result {
-        use schema::builds::dsl::*;
+        use crate::schema::builds::dsl::*;
         let conn = &self.0.get().unwrap();
         let (val, _) = RepoState::Purged.to_db();
         builds
@@ -349,7 +349,7 @@ impl Handler<InitPurge> for DbExecutor {
     type Result = Result<(), ApiError>;
 
     fn handle(&mut self, msg: InitPurge, _: &mut Self::Context) -> Self::Result {
-        use schema::builds::dsl::*;
+        use crate::schema::builds::dsl::*;
         let conn = &self.0.get().unwrap();
         conn.transaction::<(), DieselError, _>(|| {
             let current_build = builds
@@ -394,7 +394,7 @@ impl Handler<FinishPurge> for DbExecutor {
     type Result = Result<Build, ApiError>;
 
     fn handle(&mut self, msg: FinishPurge, _: &mut Self::Context) -> Self::Result {
-        use schema::builds::dsl::*;
+        use crate::schema::builds::dsl::*;
         let conn = &self.0.get().unwrap();
         conn.transaction::<Build, DieselError, _>(|| {
             let current_build = builds
